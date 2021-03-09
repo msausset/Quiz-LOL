@@ -1,13 +1,92 @@
-// Very Easy Difficulty
+class Question {
+    constructor(text, choices, answer) {
+        this.text = text;
+        this.choices = choices;
+        this.answer = answer;
+    }
+    isCorrectAnswer(choice) {
+        return this.answer === choice;
+    }
+}
+
+class Quiz {
+    constructor(questions) {
+        this.score = 0;
+        this.questions = questions;
+        this.currentQuestionIndex = 0;
+    }
+    getCurrentQuestionIndex() {
+        return this.questions[this.currentQuestionIndex];
+    }
+    guess(answer) {
+        if (this.getCurrentQuestionIndex().isCorrectAnswer(answer)) {
+            this.score++;
+        }
+        this.currentQuestionIndex++;
+    }
+    hasEnded() {
+        return this.currentQuestionIndex >= this.questions.length;
+    }
+}
+
+const display = {
+
+    elementShown: function (id, text) {
+        let element = document.getElementById(id);
+        element.innerHTML = text;
+    },
+
+    endQuiz: function () {
+        let endQuizHTML = `<h1>Quiz terminé </h1>
+    <h3> Votre score est de : ${quiz.score} / ${quiz.questions.length}`;
+        this.elementShown("question", endQuizHTML);
+        document.getElementById("startOver").style.display = "inline-block";
+    },
+
+    question: function () {
+        this.elementShown("question", quiz.getCurrentQuestionIndex().text);
+    },
+
+    choices: function () {
+        let choices = quiz.getCurrentQuestionIndex().choices;
+
+        guessHandler = (id, guess) => {
+            document.getElementById(id).onclick = function () {
+                quiz.guess(guess);
+                quizApp();
+            }
+        }
+        for (let i = 0; i < choices.length; i++) {
+            this.elementShown("choice" + i, choices[i]);
+            guessHandler("guess" + i, choices[i]);
+        }
+    },
+
+    progress: function () {
+        let currentQuestionNumber = quiz.currentQuestionIndex + 1;
+        this.elementShown("progress", "Question " + currentQuestionNumber + " sur " + quiz.questions.length);
+    },
+}
+
+quizApp = () => {
+    if (quiz.hasEnded()) {
+        display.endQuiz();
+    } else {
+        display.question();
+        display.choices();
+        display.progress();
+    }
+}
+
+function startOver() {
+    location.reload();
+    /* this.currentQuestionIndex = 0;
+    console.log(this.currentQuestionIndex);
+    new Quiz (questions);
+    quizApp(); */
+}
 
 function veryEasy() {
-
-    /* class QuizDifficulty {
-        constructor(text, choices) {
-            this.text = text;
-            this.choices = choices;
-        }
-    } */
 
     document.getElementById("difficultyQuestion").style.display = "none";
     document.getElementById("difficulty0").style.display = "none";
@@ -20,23 +99,7 @@ function veryEasy() {
     document.getElementById("guess2").style.display = "inline-block";
     document.getElementById("guess3").style.display = "inline-block";
 
-    class Question {
-        constructor(text, choices, answer) {
-            this.text = text;
-            this.choices = choices;
-            this.answer = answer;
-        }
-        isCorrectAnswer(choice) {
-            return this.answer === choice;
-        }
-    }
-
-    /* let quizDifficulty = [
-        new QuizDifficulty("Quelle niveau de difficulté voulez-vous ?", 
-        ["Facile", "Moyen", "Difficile", "Très difficile"])
-    ]; */
-
-    let questions = [
+    questions = [
         new Question("Lequel de ces champions est AD ?",
             ["Katarina", "Ryze", "Darius", "Veigar"],
             "Darius"),
@@ -51,119 +114,12 @@ function veryEasy() {
             "Armure de Warmog")
     ];
 
-    class Quiz {
-        constructor(questions) {
-            this.score = 0;
-            this.questions = questions;
-            this.currentQuestionIndex = 0;
-        }
-        getCurrentQuestionIndex() {
-            return this.questions[this.currentQuestionIndex];
-        }
-        guess(answer) {
-            if (this.getCurrentQuestionIndex().isCorrectAnswer(answer)) {
-                this.score++;
-            }
-            this.currentQuestionIndex++;
-        }
-        hasEnded() {
-            return this.currentQuestionIndex >= this.questions.length;
-        }
-    }
-
-    // regroup all functions relative to the app display 
-
-    const display = {
-
-        elementShown: function (id, text) {
-            let element = document.getElementById(id);
-            element.innerHTML = text;
-        },
-
-        endQuiz: function () {
-            let endQuizHTML = `<h1>Quiz terminé </h1>
-        <h3> Votre score est de : ${quiz.score} / ${quiz.questions.length}`;
-            this.elementShown("question", endQuizHTML);
-            document.getElementById("startOver").style.display = "inline-block";
-        },
-
-        question: function () {
-            this.elementShown("question", quiz.getCurrentQuestionIndex().text);
-        },
-
-        choices: function () {
-            let choices = quiz.getCurrentQuestionIndex().choices;
-
-            guessHandler = (id, guess) => {
-                document.getElementById(id).onclick = function () {
-                    quiz.guess(guess);
-                    quizApp();
-                }
-            }
-            for (let i = 0; i < choices.length; i++) {
-                this.elementShown("choice" + i, choices[i]);
-                guessHandler("guess" + i, choices[i]);
-            }
-        },
-
-        progress: function () {
-            let currentQuestionNumber = quiz.currentQuestionIndex + 1;
-            this.elementShown("progress", "Question " + currentQuestionNumber + " sur " + quiz.questions.length);
-        },
-    }
-
-    ////////////////////////////////////////////
-
-    // game logic
-
-    quizApp = () => {
-        if (quiz.hasEnded()) {
-            display.endQuiz();
-        } else {
-            display.question();
-            display.choices();
-            display.progress();
-        }
-    }
-
-    //create quiz 
-
-    /* let quiz = new veryEasyQuiz(veryEasyQuestions);
-    quizApp(); */
-
-
-
-    /* let quiz = new veryEasyQuiz(veryEasyQuestions);
-        quizApp(); */
-
-    let quiz = new Quiz(questions);
+    quiz = new Quiz(questions);
     quizApp();
     console.log(quiz);
-
-    ////////////////////////////////////////////
-
 }
-
-function startOver() {
-    location.reload();
-    /* this.currentQuestionIndex = 0;
-    console.log(this.currentQuestionIndex);
-    new Quiz (questions);
-    quizApp(); */
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////
-
-// Easy Difficulty
 
 function easy() {
-
-    /* class QuizDifficulty {
-        constructor(text, choices) {
-            this.text = text;
-            this.choices = choices;
-        }
-    } */
 
     document.getElementById("difficultyQuestion").style.display = "none";
     document.getElementById("difficulty0").style.display = "none";
@@ -176,23 +132,7 @@ function easy() {
     document.getElementById("guess2").style.display = "inline-block";
     document.getElementById("guess3").style.display = "inline-block";
 
-    class Question {
-        constructor(text, choices, answer) {
-            this.text = text;
-            this.choices = choices;
-            this.answer = answer;
-        }
-        isCorrectAnswer(choice) {
-            return this.answer === choice;
-        }
-    }
-
-    /* let quizDifficulty = [
-        new QuizDifficulty("Quelle niveau de difficulté voulez-vous ?", 
-        ["Facile", "Moyen", "Difficile", "Très difficile"])
-    ]; */
-
-    let questions = [
+    questions = [
         new Question("Lequel de ces ultimates est en AoE ?",
             ["Caitlyn", "Malphite", "Maître Yi", "Skarner"],
             "Malphite"),
@@ -207,119 +147,12 @@ function easy() {
             "Morgana")
     ];
 
-    class Quiz {
-        constructor(questions) {
-            this.score = 0;
-            this.questions = questions;
-            this.currentQuestionIndex = 0;
-        }
-        getCurrentQuestionIndex() {
-            return this.questions[this.currentQuestionIndex];
-        }
-        guess(answer) {
-            if (this.getCurrentQuestionIndex().isCorrectAnswer(answer)) {
-                this.score++;
-            }
-            this.currentQuestionIndex++;
-        }
-        hasEnded() {
-            return this.currentQuestionIndex >= this.questions.length;
-        }
-    }
-
-    // regroup all functions relative to the app display 
-
-    const display = {
-
-        elementShown: function (id, text) {
-            let element = document.getElementById(id);
-            element.innerHTML = text;
-        },
-
-        endQuiz: function () {
-            let endQuizHTML = `<h1>Quiz terminé </h1>
-        <h3> Votre score est de : ${quiz.score} / ${quiz.questions.length}`;
-            this.elementShown("question", endQuizHTML);
-            document.getElementById("startOver").style.display = "inline-block";
-        },
-
-        question: function () {
-            this.elementShown("question", quiz.getCurrentQuestionIndex().text);
-        },
-
-        choices: function () {
-            let choices = quiz.getCurrentQuestionIndex().choices;
-
-            guessHandler = (id, guess) => {
-                document.getElementById(id).onclick = function () {
-                    quiz.guess(guess);
-                    quizApp();
-                }
-            }
-            for (let i = 0; i < choices.length; i++) {
-                this.elementShown("choice" + i, choices[i]);
-                guessHandler("guess" + i, choices[i]);
-            }
-        },
-
-        progress: function () {
-            let currentQuestionNumber = quiz.currentQuestionIndex + 1;
-            this.elementShown("progress", "Question " + currentQuestionNumber + " sur " + quiz.questions.length);
-        },
-    }
-
-    ////////////////////////////////////////////
-
-    // game logic
-
-    quizApp = () => {
-        if (quiz.hasEnded()) {
-            display.endQuiz();
-        } else {
-            display.question();
-            display.choices();
-            display.progress();
-        }
-    }
-
-    //create quiz 
-
-    /* let quiz = new easyQuiz(easyQuestions);
-    quizApp(); */
-
-
-
-    /* let quiz = new easyQuiz(easyQuestions);
-        quizApp(); */
-
-    let quiz = new Quiz(questions);
+    quiz = new Quiz(questions);
     quizApp();
     console.log(quiz);
-
-    ////////////////////////////////////////////
-
 }
-
-function startOver() {
-    location.reload();
-    /* this.currentQuestionIndex = 0;
-    console.log(this.currentQuestionIndex);
-    new Quiz (questions);
-    quizApp(); */
-}
-
-////////////////////////////////////////////////////////////
-
-// Hard Difficulty
 
 function hard() {
-
-    /* class QuizDifficulty {
-        constructor(text, choices) {
-            this.text = text;
-            this.choices = choices;
-        }
-    } */
 
     document.getElementById("difficultyQuestion").style.display = "none";
     document.getElementById("difficulty0").style.display = "none";
@@ -332,23 +165,7 @@ function hard() {
     document.getElementById("guess2").style.display = "inline-block";
     document.getElementById("guess3").style.display = "inline-block";
 
-    class Question {
-        constructor(text, choices, answer) {
-            this.text = text;
-            this.choices = choices;
-            this.answer = answer;
-        }
-        isCorrectAnswer(choice) {
-            return this.answer === choice;
-        }
-    }
-
-    /* let quizDifficulty = [
-        new QuizDifficulty("Quelle niveau de difficulté voulez-vous ?", 
-        ["Facile", "Moyen", "Difficile", "Très difficile"])
-    ]; */
-
-    let questions = [
+    questions = [
         new Question("De quelle région vient Garen ?",
             ["Noxus", "Shurima", "Demacia", "Runeterra"],
             "Demacia"),
@@ -363,119 +180,12 @@ function hard() {
             "235")
     ];
 
-    class Quiz {
-        constructor(questions) {
-            this.score = 0;
-            this.questions = questions;
-            this.currentQuestionIndex = 0;
-        }
-        getCurrentQuestionIndex() {
-            return this.questions[this.currentQuestionIndex];
-        }
-        guess(answer) {
-            if (this.getCurrentQuestionIndex().isCorrectAnswer(answer)) {
-                this.score++;
-            }
-            this.currentQuestionIndex++;
-        }
-        hasEnded() {
-            return this.currentQuestionIndex >= this.questions.length;
-        }
-    }
-
-    // regroup all functions relative to the app display 
-
-    const display = {
-
-        elementShown: function (id, text) {
-            let element = document.getElementById(id);
-            element.innerHTML = text;
-        },
-
-        endQuiz: function () {
-            let endQuizHTML = `<h1>Quiz terminé </h1>
-        <h3> Votre score est de : ${quiz.score} / ${quiz.questions.length}`;
-            this.elementShown("question", endQuizHTML);
-            document.getElementById("startOver").style.display = "inline-block";
-        },
-
-        question: function () {
-            this.elementShown("question", quiz.getCurrentQuestionIndex().text);
-        },
-
-        choices: function () {
-            let choices = quiz.getCurrentQuestionIndex().choices;
-
-            guessHandler = (id, guess) => {
-                document.getElementById(id).onclick = function () {
-                    quiz.guess(guess);
-                    quizApp();
-                }
-            }
-            for (let i = 0; i < choices.length; i++) {
-                this.elementShown("choice" + i, choices[i]);
-                guessHandler("guess" + i, choices[i]);
-            }
-        },
-
-        progress: function () {
-            let currentQuestionNumber = quiz.currentQuestionIndex + 1;
-            this.elementShown("progress", "Question " + currentQuestionNumber + " sur " + quiz.questions.length);
-        },
-    }
-
-    ////////////////////////////////////////////
-
-    // game logic
-
-    quizApp = () => {
-        if (quiz.hasEnded()) {
-            display.endQuiz();
-        } else {
-            display.question();
-            display.choices();
-            display.progress();
-        }
-    }
-
-    //create quiz 
-
-    /* let quiz = new veryEasyQuiz(veryEasyQuestions);
-    quizApp(); */
-
-
-
-    /* let quiz = new veryEasyQuiz(veryEasyQuestions);
-        quizApp(); */
-
-    let quiz = new Quiz(questions);
+    quiz = new Quiz(questions);
     quizApp();
     console.log(quiz);
-
-    ////////////////////////////////////////////
-
 }
-
-function startOver() {
-    location.reload();
-    /* this.currentQuestionIndex = 0;
-    console.log(this.currentQuestionIndex);
-    new Quiz (questions);
-    quizApp(); */
-}
-
-////////////////////////////////////////////////////////////
-
-// Very Hard Difficulty
 
 function veryHard() {
-
-    /* class QuizDifficulty {
-        constructor(text, choices) {
-            this.text = text;
-            this.choices = choices;
-        }
-    } */
 
     document.getElementById("difficultyQuestion").style.display = "none";
     document.getElementById("difficulty0").style.display = "none";
@@ -488,27 +198,11 @@ function veryHard() {
     document.getElementById("guess2").style.display = "inline-block";
     document.getElementById("guess3").style.display = "inline-block";
 
-    class Question {
-        constructor(text, choices, answer) {
-            this.text = text;
-            this.choices = choices;
-            this.answer = answer;
-        }
-        isCorrectAnswer(choice) {
-            return this.answer === choice;
-        }
-    }
-
-    /* let quizDifficulty = [
-        new QuizDifficulty("Quelle niveau de difficulté voulez-vous ?", 
-        ["Facile", "Moyen", "Difficile", "Très difficile"])
-    ]; */
-
-    let questions = [
+    questions = [
         new Question("Quelle est la citation de Taric ?",
-            ["Les meilleures armes sont magnifiques.", "Ionia a changé et moi aussi je dois changer.", 
-            "Mon potentiel est sans limite. Nul ne pourra le confiner.", 
-            "Vous ne nous avez pas tous détruits. Vous paierez cher cette erreur."],
+            ["Les meilleures armes sont magnifiques.", "Ionia a changé et moi aussi je dois changer.",
+                "Mon potentiel est sans limite. Nul ne pourra le confiner.",
+                "Vous ne nous avez pas tous détruits. Vous paierez cher cette erreur."],
             "Les meilleures armes sont magnifiques."),
         new Question("Ornn est le frère de quel champion ?",
             ["Maokai", "Galio", "Trundle", "Volibear"],
@@ -521,103 +215,7 @@ function veryHard() {
             "Jayce")
     ];
 
-    class Quiz {
-        constructor(questions) {
-            this.score = 0;
-            this.questions = questions;
-            this.currentQuestionIndex = 0;
-        }
-        getCurrentQuestionIndex() {
-            return this.questions[this.currentQuestionIndex];
-        }
-        guess(answer) {
-            if (this.getCurrentQuestionIndex().isCorrectAnswer(answer)) {
-                this.score++;
-            }
-            this.currentQuestionIndex++;
-        }
-        hasEnded() {
-            return this.currentQuestionIndex >= this.questions.length;
-        }
-    }
-
-    // regroup all functions relative to the app display 
-
-    const display = {
-
-        elementShown: function (id, text) {
-            let element = document.getElementById(id);
-            element.innerHTML = text;
-        },
-
-        endQuiz: function () {
-            let endQuizHTML = `<h1>Quiz terminé </h1>
-        <h3> Votre score est de : ${quiz.score} / ${quiz.questions.length}`;
-            this.elementShown("question", endQuizHTML);
-            document.getElementById("startOver").style.display = "inline-block";
-        },
-
-        question: function () {
-            this.elementShown("question", quiz.getCurrentQuestionIndex().text);
-        },
-
-        choices: function () {
-            let choices = quiz.getCurrentQuestionIndex().choices;
-
-            guessHandler = (id, guess) => {
-                document.getElementById(id).onclick = function () {
-                    quiz.guess(guess);
-                    quizApp();
-                }
-            }
-            for (let i = 0; i < choices.length; i++) {
-                this.elementShown("choice" + i, choices[i]);
-                guessHandler("guess" + i, choices[i]);
-            }
-        },
-
-        progress: function () {
-            let currentQuestionNumber = quiz.currentQuestionIndex + 1;
-            this.elementShown("progress", "Question " + currentQuestionNumber + " sur " + quiz.questions.length);
-        },
-    }
-
-    ////////////////////////////////////////////
-
-    // game logic
-
-    quizApp = () => {
-        if (quiz.hasEnded()) {
-            display.endQuiz();
-        } else {
-            display.question();
-            display.choices();
-            display.progress();
-        }
-    }
-
-    //create quiz 
-
-    /* let quiz = new veryEasyQuiz(veryEasyQuestions);
-    quizApp(); */
-
-
-
-    /* let quiz = new veryEasyQuiz(veryEasyQuestions);
-        quizApp(); */
-
-    let quiz = new Quiz(questions);
+    quiz = new Quiz(questions);
     quizApp();
     console.log(quiz);
-
-    ////////////////////////////////////////////
-
-}
-
-function startOver() {
-    location.reload();
-    /* this.currentQuestionIndex = 0;
-    console.log(this.currentQuestionIndex);
-    new Quiz (questions);
-    quizApp(); */
 }
