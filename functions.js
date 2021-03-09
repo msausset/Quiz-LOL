@@ -87,7 +87,7 @@ function startOver() {
 }
 
 function veryEasy() {
-
+    
     document.getElementById("difficultyQuestion").style.display = "none";
     document.getElementById("difficulty0").style.display = "none";
     document.getElementById("difficulty1").style.display = "none";

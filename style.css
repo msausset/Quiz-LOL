@@ -62,8 +62,8 @@ body #progress {
   color: #ffa502;
 }
 
-.startOver{
-  display: none;
-}
+/* .startOver{
+  display: none !important; 
+} */
 
 /*# sourceMappingURL=style.css.map */
